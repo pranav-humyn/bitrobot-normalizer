@@ -58,26 +58,7 @@ docker run --rm \
 
 ## Important notes
 
-- **A real vendor calibration now exists** (Kalibr `calibrate_cameras` ->
-  `calibrate_imu_camera`) for this rig, replacing the earlier self-calibrated
-  version used before it was uploaded — real metric baseline, real
-  reprojection-error stats, real camera-IMU extrinsics.
-- **Which physical `.db` file the calibration describes was verified, not
-  assumed.** `calibration.json`'s IMU block states `update_rate_hz: 202.3`;
-  the actual measured sample rate of `imu_right_<N>.db` (202.2Hz) matches
-  that almost exactly, versus `imu_<N>.db`'s 199.5Hz — confirming
-  `imu_right_<N>.db` is the one described. The device carries a second IMU
-  (`imu_<N>.db`) this schema has no slot for; it's read but not used.
-- **Raw ADC counts are converted using real, vendor-provided constants** from
-  `calibration.json`'s own `_provenance.raw_sensor_scales` (`accel_lsb_per_g:
-  8192`, `gyro_lsb_per_dps: 65.5`) — not an inferred/guessed value.
 - **No per-frame capture timestamp exists for bitrobot** (unlike akai's fsync
   markers or oak-d's `_ts.csv`). `frame_timestamps.csv` is derived from the
   nominal frame rate (frame *i* at *i*/fps), not a measured per-frame
   timestamp — a real limitation of this device's raw data, not a bug.
-- **Strict 11-file output** — only the calibrated eye pair is normalized;
-  `left_front`/`right_front` and `left_far`/`right_far` are left out, matching
-  the spec's "no per-device variation in package shape" rule (verified
-  directly against live akai/oak-d packages in production).
-- **Validated so far**: one short chunk end-to-end. Not yet run across a full
-  session (22 chunks) or a different unit/site.
